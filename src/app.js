@@ -12,6 +12,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 const express_session = require('express-session');
 const mySqlSession = require('express-mysql-session');
+const expressEjsLayouts = require('express-ejs-layouts');
 
 // Paquetes NODEJS
 const path = require('path');
@@ -19,13 +20,30 @@ const path = require('path');
 // Controladores
 const { pagina_no_encontrada } = require('./routes/404/404.routes');
 
+
 // Configuraciones express
-app.set('view engine', 'ejs');
+app.use(expressEjsLayouts)
 app.set('views', path.join( __dirname, 'views'));
+app.set('view engine', 'ejs');
+app.set('layoutt', path.join( app.get('views'), 'layout'));
+const ruta_layout = app.get('layoutt')
+app.set('layout', path.join(ruta_layout, 'layout'));
+
+
+
+// Middledewares
 
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello world</h1><script src="/socket.io/socket.io.js"></script><script>var socket = io();</script>');
+
+    var local_i = {
+        Titulo: 'Inicio',
+        autor: 'EDGIDIO RANZE LEÓN FLOREZ',
+    };
+
+    res.render('pages/dashboard/index', {
+        local_i
+    });
 });
 
 // Publico
