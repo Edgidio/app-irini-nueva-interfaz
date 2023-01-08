@@ -10,6 +10,7 @@ const io = new Server(server);
 // Paquetes NPM
 const morgan = require('morgan');
 require('dotenv').config();
+const passport   = require('passport')
 const express_session = require('express-session');
 const mySqlSession = require('express-mysql-session');
 const expressEjsLayouts = require('express-ejs-layouts');
@@ -22,16 +23,31 @@ const { pagina_no_encontrada } = require('./routes/404/404.routes');
 
 
 // Configuraciones express
-app.use(expressEjsLayouts)
+app.set('PORT', process.env.PORT || process.env.PUERTO_DEL_SERVIDOR)
 app.set('views', path.join( __dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('layoutt', path.join( app.get('views'), 'layout'));
 const ruta_layout = app.get('layoutt')
 app.set('layout', path.join(ruta_layout, 'layout'));
 
-
+app.set('trust proxy', true);
 
 // Middledewares
+app.use(expressEjsLayouts)
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// For Passport 
+app.use(express_session({ 
+    secret: 'Iniri_nadajqw',
+    resave: true, 
+    saveUninitialized:true
+})); // session secret 
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
+// Rutas
+app.use('/auth', require('./routes/auth/auth.routes.js'))
 
 
 app.get('/', (req, res) => {
@@ -59,4 +75,7 @@ io.on('connection', (socket) => {
 
 
 // exprort servidor
-module.exports = server;
+module.exports = {
+    server: server,
+    app: app
+};

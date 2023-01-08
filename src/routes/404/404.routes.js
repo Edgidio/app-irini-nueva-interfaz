@@ -4,7 +4,14 @@ exports.pagina_no_encontrada = (req, res, next) => {
                 return res.status(404)
                           .render('404/index_404.ejs');
             } */
-        
+            
+            var local_i = {
+                Titulo: 'Página no encontrada',
+                autor: 'EDGIDIO RANZE LEÓN FLOREZ',
+            };
+
             return res.status(404)
-                      .render('404/index_404.ejs');
+                      .render('pages/404/index_404.ejs', {
+                        local_i
+                      });
 }

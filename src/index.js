@@ -1,5 +1,15 @@
-const Server = require('./app')
+const {app, server} = require('./app')
+const {sequelize} = require('./db/database.js')
 
-Server.listen(3000, () => {
-    console.log('listening on *:3000');
+server.listen(app.get('PORT'), async () => {
+
+    console.log('Servidor corriendo en el puerto: ', app.get('PORT'));
+
+    // Coneccion a la base de datos
+    try {
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+      } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
 });
